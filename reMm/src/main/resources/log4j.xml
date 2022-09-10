@@ -20,7 +20,7 @@
 
 	
 	<!-- Application Loggers -->
-	<logger name="basic.configuration.template">
+	<logger name="com.chuiMit.reMm">
 		<level value="info" />
 	</logger>
 	
