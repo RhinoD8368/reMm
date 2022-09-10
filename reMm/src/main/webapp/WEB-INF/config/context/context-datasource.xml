@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 오라클 db와 연동하기 위한 bean 생성 기본 (log4j x)
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	  <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+	   <property name="url"  		   value="jdbc:oracle:thin:@localhost:1521:system"/>  
+	  <property name="url"  		   value="jdbc:oracle:thin:@localhost:1521/ORCLPDB"/>
+  	  <property name="username" 	   value="system"/>
+	  <property name="password" 	   value="1234"/>
+	</bean>
+	-->
+	
+	<!-- log4j 설정 
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+	  <property name="url"  		   value="jdbc:log4jdbc:oracle:thin:@localhost:1521/ORCLPDB"/>
+  	  <property name="username" 	   value="system"/>
+	  <property name="password" 	   value="1234"/>
+	</bean>
+	-->
+	
+	<!-- lazyluke 쿼리 정렬 설정 -->
+	<bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+	  <property name="url"  		   value="jdbc:log4jdbc:oracle:thin:@localhost:1521/ORCLPDB"/>
+  	  <property name="username" 	   value="system"/>
+	  <property name="password" 	   value="1234"/>
+	</bean>
+	
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSourceSpied"/>
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL		: "></property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	
+	
+	<!-- 
+		### [주의]
+		오라클 DB의 SID로 접속하는 방법과 SERVICE_NAME으로 접속하는 방식이 다름
+		SID 		 접속 -> jdbc:oracle:thin:@DB서버IP:port:sid
+		SERVICE_NAME 접속 -> jdbc:oracle:thin:@DB서버IP:port/서비스이름
+		
+		PDB를 생성하면 서비스이름으로 접속해야한다.
+	 -->
+	
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="SqlSessionFactory">
+	  <property name="dataSource" ref="dataSource" />
+	  <property name="configLocation" value="/WEB-INF/config/context/context-mybatis.xml"/>
+	  <property name="mapperLocations" value="classpath:/mapper/*-SQL.xml" />
+	  <!-- 
+	  <property value="classpath:mybatis-config.xml" name="configLocation" />
+	  <property value="classpath:/mapper/*Mapper.xml" name="mapperLocations" />
+	   -->
+	</bean>
+	
+	<mybatis-spring:scan base-package="basic.configuration.template" />
+	
+</beans>
