@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	xsi:schemaLocation="http://Java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<!-- 빌드 과정
 
-	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+		웹어플리케이션 실행 
+		-> WAS가 web.xml 로드  
+		-> ApplicationContext를 생성하는 ContextLoaderListener가 web.xml에 등록된 내용에 따라 생성 
+		-> root-context.xml에 등록된 Spring Container가 구동되며 필요한 객체들 생성 
+		-> client요청 들어옴 
+		-> DipatcherServlet 생성 
+		-> 알맞은 Page Controller에게 전달하고 응답을 어떻게 할지 결정 
+		-> Dispatcher Servlet은 servlet-context.xml을 loading 
+		-> 두번째 Spring Container가 구동될 때 첫번째 Container가 구동되며 생성된 DAO, VO, ServiceImple클래스들과 협업하여 작업 처리 
+	
+	 -->
+	 
+	 <!-- [ Title 설정 ] -->
+	 <display-name>reMm</display-name>
+
+	<!-- 스프링 컨테이너를 구동시키기 위한 설정파일들의 위치 -->
+	<!-- [WEB-INF 폴더란?] 웹 어플리케이션을 실행하는데 필요한 클래스 파일 및 설정 파일 등이 저장되는 폴더 .. 외부에서 참조 불가능하다? -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<param-value>/WEB-INF/config/context/context-*.xml</param-value>
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
@@ -20,7 +38,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+			<param-value>/WEB-INF/config/servlet/*-servlet.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

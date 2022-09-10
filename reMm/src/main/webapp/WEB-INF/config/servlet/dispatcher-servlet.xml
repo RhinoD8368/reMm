@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+						http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+						http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- 이 파일은 Spring Bean Configuration File 로 생성한 파일입니다. -->
+
+<!-- Dispatcher Servlet 설정 파일 -->
+
+	<!-- 
+		 이미 등록된 bean에 대해서만 Annotation을 활성화한다.
+		 어딘가에 bean을 등록해놓으면 @Autowired와 @Qualifier Annotation을 해석해서 가져다 쓰겠다는 의미이다.
+		 @Autowired와 @Qualifier 두 가지만 해결한다.
+	     따라서 위 태그를 사용하더라도 xml에 bean을 반드시 선언해야 한다.
+    -->
+	<context:annotation-config/>
+	
+	<!-- @requestMapping 관련 어노테이션 같은데 정확히 모르겠다.
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+	-->
+	 
+	<!-- 
+		 bean의 등록 여부와 관계없다. 스프링이 알아서 bean 스캔을 통해 Annotation을 해석하고 활성화한다.
+		 @Autowired와 @Qualifier 뿐만 아니라 @Service, @Component, @Controller, @Repository 등 모든 클래스를 스캔하고 bean을 작성한다.
+ 	 	 따라서 이 태그를 사용하면 위 태그는 사용할 필요가 없다.
+		 다만 이 경우 base-package를 통해 스프링이 스캔할 패키지 위치를 지정해두는 것이 일반적이다. 
+	-->
+	<context:component-scan base-package="com.chuiMit.reMm"></context:component-scan>
+	
+	<!-- 뷰 리졸버 셋팅 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean> 
+	 
+	<!-- 어노테이션 기반의 컨트롤러 호출이다 bean등록 mapping 기능을 편리하게 해준다. -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+
+</beans>
